@@ -7,6 +7,9 @@ import os
 
 
 class RobustModel(nn.Module):
+    '''
+        Baseline model : Simple CNN model
+    '''
     def __init__(self):
         super(RobustModel, self).__init__()
         self.keep_prob = 0.5

@@ -49,9 +49,9 @@ def inference(data_loader, model):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='2022 DL Term Project #1')
-    parser.add_argument('--load-model', default='model.pt', help="Model's state_dict")
+    parser.add_argument('--load_model', default='model.pt', help="Model's state_dict")
     parser.add_argument('--dataset', default='./test/', help='image dataset directory')
-    parser.add_argument('--batch-size', default=16, help='test loader batch size')
+    parser.add_argument('--batch_size', default=16, help='test loader batch size')
 
     args = parser.parse_args()
 
@@ -68,5 +68,5 @@ if __name__ == '__main__':
     # write model inference
     preds = inference(test_loader, model)
 
-    with open('result4.txt', 'w') as f:
+    with open('result.txt', 'w') as f:
         f.writelines('\n'.join(map(str, preds)))
