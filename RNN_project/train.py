@@ -4,16 +4,20 @@ import numpy as np
 from tqdm import tqdm
 from model import BaseModel
 from dataset import TextDataset, make_data_loader
+from util import *
 
 def acc(pred,label):
     pred = pred.argmax(dim=-1)
     return torch.sum(pred == label).item()
 
-def train(args, data_loader, model):
+def train(args, data_loader, test_loader,model):
     """
     TODO: Change the training code as you need. (e.g. different optimizer, different loss function, etc.)
             You can add validation code. -> This will increase the accuracy.
     """
+    tensorboard_plt = TensorboardPlotter(args.log_dir)
+    
+
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     min_loss = np.Inf
@@ -26,12 +30,17 @@ def train(args, data_loader, model):
         
         model.train()
         for i, (text, label) in enumerate(tqdm(data_loader)):
+            input_lengths = torch.tensor([len(x.nonzero()) for x in text])
+            input_lengths, perm_idx = input_lengths.sort(0,descending=True)
+            text = text[perm_idx]
+            label = label[perm_idx]
+
 
             text = text.to(args.device)
             label = label.to(args.device)            
             optimizer.zero_grad()
 
-            output, _ = model(text)
+            output, _ = model(text, input_lengths)
             
             label = label.squeeze()
             loss = criterion(output, label)
@@ -49,11 +58,49 @@ def train(args, data_loader, model):
         print(f'train_loss : {epoch_train_loss}')
         print('train_accuracy : {:.3f}'.format(epoch_train_acc*100))
 
+        # Plot to tensorboard
+        tensorboard_plt.loss_plot('loss','train',epoch_train_loss,epoch)
+        tensorboard_plt.loss_plot('accuracy','train',epoch_train_acc,epoch)
+
+
+        # Validation
+        valid_losses = []
+        valid_acc = 0.0
+        total = 0
+        model.eval()
+        for i, (text, label) in enumerate(tqdm(test_loader)):
+            input_lengths = torch.tensor([len(x.nonzero()) for x in text])
+            input_lengths, perm_idx = input_lengths.sort(0,descending=True)
+            text = text[perm_idx]
+            label = label[perm_idx]
+
+            text = text.to(args.device)
+            label = label.to(args.device)
+            with torch.no_grad():
+                output, _ = model(text, input_lengths)
+                label = label.squeeze()
+                loss = criterion(output, label)
+            valid_losses.append(loss.item())
+            total += label.size(0)
+            valid_acc += acc(output, label)
+        
+        epoch_valid_loss = np.mean(valid_losses)
+        epoch_valid_acc = valid_acc/total
+        print(f'valid_loss : {epoch_valid_loss}')
+        print('valid_accuracy : {:.3f}'.format(epoch_valid_acc*100))
+
+        # Plot to tensorboard
+        tensorboard_plt.loss_plot('loss','valid',epoch_valid_loss,epoch)
+        tensorboard_plt.loss_plot('accuracy','valid',epoch_valid_acc,epoch)
+        tensorboard_plt.overlap_plot('loss',{'train':epoch_train_loss,'valid':epoch_valid_loss},epoch)
+        tensorboard_plt.overlap_plot('accuracy',{'train':epoch_train_acc,'valid':epoch_valid_acc},epoch)
+
+
         # Save Model
-        if epoch_train_loss < min_loss:
-            torch.save(model.state_dict(), 'model.pt')
-            print('Train loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(min_loss, epoch_train_loss))
-            min_loss = epoch_train_loss
+        if epoch_valid_loss < min_loss:
+            torch.save(model.state_dict(), args.model_name)
+            print('Valid loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(min_loss, epoch_train_loss))
+            min_loss = epoch_valid_loss
 
 
 
@@ -64,9 +111,11 @@ if __name__ == '__main__':
     parser.add_argument('--data_dir', type=str, default='./Data')
     parser.add_argument('--batch_size', type=int, default=64, help="Batch size for training (default: 64)")
     parser.add_argument('--vocab_size', type=int, default=30000, help="maximum vocab size")
-    parser.add_argument('--batch_first', action='store_true', help="If true, then the model returns the batch first")
+    parser.add_argument('--batch_first', action='store_true', default=True,help="If true, then the model returns the batch first")
     parser.add_argument('--learning_rate', type=float, default=0.001, help="Learning rate (default: 0.001)")
-    parser.add_argument('--num_epochs', type=int, default=100, help="Number of epochs to train for (default: 5)")
+    parser.add_argument('--num_epochs', type=int, default=20, help="Number of epochs to train for (default: 5)")
+    parser.add_argument('--model_name', type=str, default='LSTM', help="Model name (default: LSTM)")
+    parser.add_argument('--log_dir', type=str, default='./log/')
     
     args = parser.parse_args()
 
@@ -77,15 +126,20 @@ if __name__ == '__main__':
     # Model hyperparameters
     input_size = args.vocab_size
     output_size = 4     # num of classes
-    embedding_dim = 100 # embedding dimension
+    embedding_dim = 300 # embedding dimension
     hidden_dim = 64  # hidden size of RNN
-    num_layers = 1
+    num_layers = 3
 
 
     # Make Train Loader
     train_dataset = TextDataset(args.data_dir, 'train', args.vocab_size)
     args.pad_idx = train_dataset.sentences_vocab.wtoi['<PAD>']
     train_loader = make_data_loader(train_dataset, args.batch_size, args.batch_first, shuffle=True)
+
+    # Make Test Loader
+    test_dataset = TextDataset(args.data_dir, 'test', args.vocab_size)
+    args.pad_idx = test_dataset.sentences_vocab.wtoi['<PAD>']
+    test_loader = make_data_loader(test_dataset, args.batch_size, args.batch_first, shuffle=False)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     args.device = device
@@ -96,4 +150,4 @@ if __name__ == '__main__':
     model = model.to(device)
 
     # Training The Model
-    train(args, train_loader, model)
+    train(args, train_loader,test_loader,model)

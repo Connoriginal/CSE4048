@@ -48,7 +48,7 @@ if __name__ == '__main__':
     output_size = 4     # num of classes
     embedding_dim = 100 # embedding dimension
     hidden_dim = 64  # hidden size of RNN
-    num_layers = 1
+    num_layers = 3
         
 
     # Make Test Loader

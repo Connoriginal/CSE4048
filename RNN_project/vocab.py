@@ -1,6 +1,10 @@
 from collections import Counter
 import pickle
 import os
+import torch
+import torch.nn as nn
+from torchtext.vocab import Vectors
+from torchtext import data
 
 class Vocabulary:
 
@@ -81,4 +85,15 @@ class Vocabulary:
 
         with open(f'{path}/{name}_wtoi.pkl', 'rb') as f:
             self.wtoi = pickle.load(f)
-            
+
+class WordVectors:
+    def __init__(self, vocab_size):
+        self.vocab_size = vocab_size
+        self.TEXT = data.Field(sequential=True, batch_first=True, lower=True)
+        self.LABEL = data.Field(sequential=False, batch_first=True)
+        self.vectors = Vectors(name="eng_w2v")
+
+    def __len__(self):
+        return len(self.vectors)
+
+ 
