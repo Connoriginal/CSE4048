@@ -33,14 +33,14 @@ class TextDataset(Dataset):
         Build or Load Vocabulary
 
         """
-        if mode == 'train': 
+        if mode == 'train' or mode == 'train_split': 
             self.sentences_vocab.build_vocabulary(self.sentences)
             self.labels_vocab.build_vocabulary(self.labels, add_unk=False)
 
             self.sentences_vocab.save_vocabulary('data')
             self.labels_vocab.save_vocabulary('label')
         
-        elif mode == 'test':
+        else :
             self.sentences_vocab.load_vocabulary('data', './pickles')
             self.labels_vocab.load_vocabulary('label', './pickles')
 
