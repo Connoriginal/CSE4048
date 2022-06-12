@@ -143,12 +143,12 @@ if __name__ == '__main__':
     np.random.seed(1)
 
     # Make Train Loader
-    train_dataset = TextDataset(args.data_dir, 'train', args.vocab_size)
+    train_dataset = TextDataset(args.data_dir, 'train_split', args.vocab_size)
     args.pad_idx = train_dataset.sentences_vocab.wtoi['<PAD>']
     train_loader = make_data_loader(train_dataset, args.batch_size, args.batch_first, shuffle=True)
 
     # Make valid Loader
-    test_dataset = TextDataset(args.data_dir, 'test', args.vocab_size)
+    test_dataset = TextDataset(args.data_dir, 'valid_split', args.vocab_size)
     args.pad_idx = test_dataset.sentences_vocab.wtoi['<PAD>']
     test_loader = make_data_loader(test_dataset, args.batch_size, args.batch_first, shuffle=False)
 

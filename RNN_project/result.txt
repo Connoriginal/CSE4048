@@ -1,100 +1,100 @@
-Test Accuracy : 0.80000
+Test Accuracy : 0.86000
 true label  |  predict label 
 -------------------------- 
-   education   education
    mechanics   mechanics
-         ICT         ICT
-         ICT   education
-   mechanics   mechanics
-     economy     economy
-   education   education
-     economy     economy
-   education   education
-     economy     economy
-   mechanics   mechanics
-   mechanics   mechanics
-   education   education
-     economy     economy
    education   education
          ICT         ICT
+         ICT         ICT
+   mechanics   mechanics
+     economy     economy
+   education   education
+     economy     economy
+     economy     economy
+   mechanics   mechanics
+   mechanics   mechanics
+   education   education
+   education   education
+   education   education
+     economy     economy
    mechanics   education
-     economy     economy
-     economy     economy
-     economy     economy
          ICT         ICT
      economy     economy
-   mechanics   mechanics
+     economy     economy
+     economy     economy
      economy         ICT
          ICT         ICT
    mechanics   mechanics
-   education   education
    mechanics   mechanics
          ICT         ICT
    mechanics   mechanics
+   education   education
          ICT         ICT
          ICT         ICT
+     economy     economy
+         ICT         ICT
+   mechanics   mechanics
          ICT         ICT
    education   education
+   mechanics   mechanics
+   mechanics   mechanics
+         ICT         ICT
    education         ICT
    education   education
-   mechanics   mechanics
-         ICT         ICT
+     economy   education
    mechanics   mechanics
      economy     economy
          ICT         ICT
    mechanics   mechanics
+         ICT         ICT
+   mechanics         ICT
+         ICT         ICT
+         ICT         ICT
      economy   education
-   mechanics   mechanics
-         ICT         ICT
-         ICT         ICT
          ICT   mechanics
+   education   education
+   mechanics   mechanics
+   education   education
+     economy     economy
+   education     economy
+   education   education
+     economy     economy
+         ICT         ICT
+         ICT         ICT
+         ICT         ICT
+   education   education
+     economy     economy
+         ICT         ICT
+     economy     economy
+     economy     economy
+     economy     economy
+     economy     economy
+     economy     economy
+   mechanics   mechanics
+   education         ICT
+     economy     economy
+     economy     economy
+   mechanics   mechanics
+   education   education
+     economy     economy
+   education   education
+   mechanics   mechanics
+   mechanics   mechanics
+         ICT         ICT
+         ICT         ICT
+   education   education
+     economy     economy
+   education   education
+         ICT         ICT
+     economy     economy
+   education   education
    mechanics         ICT
          ICT         ICT
-   mechanics   mechanics
-   education   mechanics
-     economy   education
-   education   education
      economy     economy
-   education   education
-     economy   education
-   education     economy
-         ICT         ICT
+     economy     economy
          ICT         ICT
    education   education
-     economy     economy
-         ICT         ICT
-         ICT         ICT
-     economy     economy
-     economy     economy
-     economy     economy
-     economy     economy
-     economy     economy
-   education     economy
-   mechanics         ICT
-   education   education
-     economy     economy
-   education     economy
-   mechanics   mechanics
-     economy     economy
-     economy     economy
-   mechanics   mechanics
-         ICT         ICT
-         ICT         ICT
-   mechanics   mechanics
-     economy   education
-   education   education
-         ICT         ICT
-     economy     economy
-     economy     economy
-   mechanics   mechanics
-         ICT         ICT
-   education   education
-     economy     economy
-   education     economy
-         ICT         ICT
-   education   education
-   mechanics         ICT
    mechanics     economy
+   mechanics         ICT
    mechanics         ICT
    education   education
      economy   education

@@ -38,11 +38,6 @@ class BaseModel(nn.Module):
 
         output = self.fc(hidden[0][-1])
 
-        # outputs, hidden = self.rnn(embedding, None)  # outputs.shape -> (sequence length, batch size, hidden size)
-
-        # outputs = outputs[:, -1, :] if self.batch_first else outputs[-1, :, :]
-        # output = self.fc(outputs)
-        
         return output, hidden
 
 class BILSTM(nn.Module):
